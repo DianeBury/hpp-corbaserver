@@ -370,6 +370,7 @@ namespace hpp
         Ret_t ret, types;
         bool ok = false;
         core::value_type tol;
+        std::vector <core::value_type> tols;
 
         _CASE_SET_RET ("PathOptimizer",
             Ret_t(problemSolver()->pathOptimizerTypes().begin(),
@@ -379,7 +380,11 @@ namespace hpp
         _CASE_PUSH_TO ("PathProjector"       , problemSolver()->pathProjectorType (tol))
         _CASE_PUSH_TO ("PathPlanner"         , problemSolver()->pathPlannerType ())
         _CASE_PUSH_TO ("ConfigurationShooter", problemSolver()->configurationShooterType ())
-        _CASE_PUSH_TO ("PathValidation"      , problemSolver()->pathValidationType (tol))
+
+        _CASE_SET_RET ("PathValidation",
+            Ret_t(problemSolver()->pathValidationTypes(tols)))
+        // _CASE_PUSH_TO ("PathValidation"      , problemSolver()->pathValidationType (tols))
+
         _CASE_PUSH_TO ("SteeringMethod"      , problemSolver()->steeringMethodType ())
         _CASE_PUSH_TO ("Distance"            , problemSolver()->distanceType ())
         _CASE_PUSH_TO ("Problem"             , server_->problemSolverMap()->selectedName())
@@ -1795,6 +1800,28 @@ namespace hpp
 	try {
 	  problemSolver()->pathValidationType (std::string (pathValidationType),
 					      tolerance);
+	} catch (const std::exception& exc) {
+	  throw hpp::Error (exc.what ());
+	}
+      }
+
+      // ---------------------------------------------------------------
+      void Problem::addPathValidation (const char* pathValidationType,
+            Double tolerance)	throw (Error)
+      {
+	try {
+	  problemSolver()->addPathValidation (std::string (pathValidationType), tolerance);
+	} catch (const std::exception& exc) {
+	  throw hpp::Error (exc.what ());
+	}
+      }
+
+      // ---------------------------------------------------------------
+
+      void Problem::clearPathValidations () throw (Error)
+      {
+	try {
+	  problemSolver()->clearPathValidations ();
 	} catch (const std::exception& exc) {
 	  throw hpp::Error (exc.what ());
 	}
